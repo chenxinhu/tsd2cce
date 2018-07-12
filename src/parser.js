@@ -267,15 +267,17 @@ class Parser {
     // Transform an object type
     if (node.type && node.type.members && node.type.members.length) {
       // Transform an object map
-      if (node.type.members[0].parameters) {
+      if (node.type.members[0].parameters && node.type.members[0].parameters[0]) {
         return `Object<${this.getTypeName(node.type.members[0].parameters[0])},${this.getTypeName(node.type.members[0])}>`;
       }
 
       let type = {};
 
       node.type.members.forEach((member) => {
-        type[member.name.text] = {};
-        this.appendType_(type[member.name.text], member);
+        if(member.name) {
+          type[member.name.text] = {};
+          this.appendType_(type[member.name.text], member);
+        }
       });
 
       return type;
